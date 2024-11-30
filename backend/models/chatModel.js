@@ -16,7 +16,9 @@ const chatSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    unRead:{type:Boolean}
+    unRead:{type:Boolean,
+        default:true
+    }
 },{
     timestamps:true
 })

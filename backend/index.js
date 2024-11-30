@@ -72,6 +72,23 @@ socket.on("send_msg", (data)=>{
     console.log("send msg data",data);
     console.log("receiver",receiver);
     io.to(receiver?.socketID).emit("receive_msg", {senderID, receiverID, message});
+});
+
+
+socket.on("startVideoCall", (data)=>{
+  console.log("startVideoCall", data);
+  const{roomID, caller, callerID}=data;
+  const receiver=getUsers(roomID);
+  console.log("receiver", receiver);
+  io.to(receiver?.socketID).emit("receive_video_call", {roomID, caller, callerID});
+})
+
+
+socket.on("call_declined", (data)=>{
+  const {receiverID, senderID, message}=data;
+  const receiver=getUsers(senderID);
+  console.log("receiver from call_declined",receiver );
+  io.to(receiver?.socketID).emit("receive_call_decline_msg", {message});
 })
 
 });

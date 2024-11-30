@@ -36,6 +36,9 @@ exports.getAllChats = async (req, res) => {
         _id: chatPartner._id,
         lastMessage: element.message,
         lastMessageTime: element.createdAt,
+        unRead:element.unRead, 
+        receiverID:element.receiverID._id,
+        senderID:element.senderID._id
       });
     }
   });
@@ -48,6 +51,16 @@ exports.getAllChats = async (req, res) => {
 exports.getMessagesOfSelectedUser = async (req, res) => {
   console.log("other user", req.query.user);
   console.log("user", req.body.userID);
+  await Chats.updateMany(
+    {
+      $or: [
+        { senderID: req.query.user, receiverID: req.body.userID },
+        { senderID: req.body.userID, receiverID: req.query.user },
+      ],
+    },
+    { $set: { unRead: false } } // Use $set to specify the field to update
+  );
+
   const getChats = await Chats.find({
     $or: [
       { senderID: req.query.user, receiverID: req.body.userID },

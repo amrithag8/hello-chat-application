@@ -6,6 +6,7 @@ import { io } from "socket.io-client";
 import { SERVER_URL } from "../utils/constants";
 import { UserContext, UserProvider } from "../contexts/userContext";
 import { ChatsContext } from "../contexts/chatsContext";
+import { videoContext } from "../contexts/videoCallContext";
 
 const MessagesHomePage = () => {
   const socket = useRef();
@@ -13,6 +14,8 @@ const MessagesHomePage = () => {
   const { setFriendsList } = useContext(UserContext);
   const { selecteduserMessages, receivedMsg, setReceivedMsg } =
     useContext(ChatsContext);
+
+    const {setReceiveVideoCall, setVideoDeclineMsg}=useContext(videoContext);
 
   useEffect(() => {
     const getAllChats = async () => {
@@ -23,6 +26,7 @@ const MessagesHomePage = () => {
         },
       });
       const result = await response.json();
+      console.log("friendslist",result );
 
       setFriendsList(result);
     };
@@ -38,6 +42,18 @@ const MessagesHomePage = () => {
       setReceivedMsg(data);
       console.log("received msg", data);
     });
+
+    socket.current.on("receive_video_call", (data)=>{
+      console.log("receive_video_call", data);
+      setReceiveVideoCall(data);
+    })
+
+    socket.current.on("receive_call_decline_msg", (data)=>{
+      console.log("data from decline", data.message);
+      setVideoDeclineMsg(data.message);
+    })
+
+    
   }, []);
   return (
     <div className="w-screen h-screen py-16 bg-gradient-to-b from-pink-400 to-purple-400">

@@ -11,6 +11,9 @@ import {
   Link,
 } from "react-router-dom";
 import MessagesHomePage from "./Pages/MessagesHomePage";
+import ProtectedRoute from "./ProtectedRoutes/ProtectedRoute";
+import ProtectedRoutesAfterLoggedIn from "./ProtectedRoutes/ProtectedRoutesAfterLoggedIn";
+import VideoCallPage from "./Pages/VideoCallPage";
 
 
 
@@ -20,28 +23,39 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <LoginPage />,
+      
+      element: <ProtectedRoutesAfterLoggedIn />,
+      children:[
+        {path: "/",
+          element: <LoginPage />,},
+          {
+            path: "/register",
+            element: <SignupPage />,
+          },
+          
+      ]
     },
+    
     {
-      path: "/register",
-      element: <SignupPage />,
-    },
-    {
-      path: "/home",
-      element: (
-        <MessagesHomePage
-         
-        />
-      ),
+      
+      element:<ProtectedRoute/>,
+      children:[
+        {path: "/home",
+          element:<MessagesHomePage/>
+        },
+        {
+          path:"/video-call",
+          element:<VideoCallPage/>
+        }
+      ]
     },
   ]);
 
   return (
     <>
       <RouterProvider router={router}>
-        <SignupPage />
-        <LoginPage />
+        {/* <SignupPage />
+        <LoginPage /> */}
       </RouterProvider>
     </>
   );

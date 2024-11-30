@@ -23,7 +23,10 @@ const FriendsList = () => {
               <div className="flex flex-col">
                 <h6 className=" font-bold">{friends.fullName}</h6>
                 <div className="flex flex-col items-start">
-                  <h6 className="text-left">{friends.lastMessage}</h6>
+                  {
+                    (friends.unRead===true&&friends.senderID!==localStorage.getItem('userID'))?(<h6 className="text-left font-bold">{friends.lastMessage}</h6>):(<h6 className="text-left">{friends.lastMessage}</h6>)
+                  }
+                  
                 </div>
               </div>
             </div>
